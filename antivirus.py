@@ -75,7 +75,6 @@ def quit_or_continue():
     if quit.upper() == "QUIT":
         sys.exit()
 
-
 # Running the all functions
 while 1:
     infected_list = scan()
