@@ -34,4 +34,4 @@ After detecting the keylogger file, the file is easy to delete by moving it into
 | 2/04/2020 | I finished my write up of my report on keyloggers writing up the final section about how to protect yourself from keyloggers and polishing up and adding more details in other sections. | 2 |
 | 11/04/2020 | I started testing out my keylogger practically to see if it works effectively. I researched a bit on antiviruses and coded one up in python. | 6 |
 | 12/04/2020 | I finished screen recording and narrating over my something awesome presentation video. | 6 |
-| 13/04/2020 | I added a guide on how to detect and delete my keylogger and finished editing my something awesome presentation video. I tried to find any bugs in the keylogger. | 5 |
+| 13/04/2020 | I tried to find and fixing any new bugs in the keylogger. One bug I found was that the time recorded for each new line wasn't being recorded correctly which is now fixed. I added a guide on how to detect and delete my keylogger and finished editing my something awesome presentation video.  | 5 |
